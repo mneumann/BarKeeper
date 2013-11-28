@@ -3,13 +3,14 @@ require 'sequel'
 DB = Sequel.connect('postgres://mneumann@localhost/test')
 
 $LOAD_PATH << "."
-require 'model_seq'
+require 'model'
 
 
 #
 # Create some initial data
 #
 user1 = User.create(:name => "Michael", :email => "test@test.de", :password_sha1 => "test")
+UserBalance.create(:user_id => user1.id, :balance => 0)
 p user1
 
 group1 = ArticleGroup.create(name: "Beverages")

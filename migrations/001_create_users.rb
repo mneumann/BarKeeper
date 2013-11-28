@@ -6,7 +6,6 @@ Sequel.migration do
       String :email, :null=>false, :size=>100, :unique=>true
       String :description, :null=>false, :size=>100, :default=>""
       String :password_sha1, :null=>false, :size=>40, :fixed=>true
-      BigDecimal :balance, :null=>false, :size=>[8,2], :default=>0
       FalseClass :is_admin, :null=>false, :default=>false
       DateTime :created_at, :null=>false, :default=>Sequel.function(:now)
     end
