@@ -1,71 +1,33 @@
-class User
-  include DataMapper::Resource
+class User < Sequel::Model
+  one_to_many :user_transactions
 
-  property :id, Serial
-
-  property :name, String,  length: 100, required: true
-  property :email, String, length: 100, required: true, unique: true, format: :email_address
-  property :description, String, length: 100, default: "", allow_nil: false
-  property :password_sha1, String, length: 40, required: true
-  property :is_admin, Boolean, default: false, required: true
-  property :balance, Decimal, default: 0, required: true
-
-  property :created_at, DateTime, allow_nil: false
-
-  has n, :user_transactions
+  def buy(article_price, count=1)
+    User.db.transaction do
+      UserTransaction.create(count: count, user: self, price: article_price)
+      total = count * article_price.price 
+      self.update(:balance => Sequel.+(:balance, total))
+    end
+  end
 end
 
-class ArticleGroup
-  include DataMapper::Resource
-
-  property :id, Serial
-  property :name, String, length: 100, required: true, unique: true
-
-  has n, :articles
+class ArticleGroup < Sequel::Model
+  one_to_many :articles
 end
 
-# TODO: unique(article_group_id, name)
-class Article
-  include DataMapper::Resource
-
-  property :id, Serial
-  property :name, String, length: 100, required: true
-  property :description, String, length: 200, default: "", allow_nil: false
-
-  property :created_at, DateTime, allow_nil: false
-
-  belongs_to :article_group
-  has n, :prices
+class Article < Sequel::Model
+  many_to_one :article_group
+  one_to_many :prices
 end
 
-class Price
-  include DataMapper::Resource
-
-  property :id, Serial
-  property :price, Decimal, required: true, scale: 2, precision: 7
-  property :created_at, DateTime, allow_nil: false
-
-  belongs_to :article
+class Price < Sequel::Model
+  many_to_one :article
 end
 
-class UserTransaction
-  include DataMapper::Resource
-
-  property :id, Serial
-  property :count, Integer, required: true
-  property :created_at, DateTime, allow_nil: false
-
-  belongs_to :user
-  belongs_to :price
+class UserTransaction < Sequel::Model
+  many_to_one :user
+  many_to_one :price
 end
 
-class UserPayment
-  include DataMapper::Resource
-
-  property :id, Serial
-
-  property :amount, Decimal, required: true
-  property :created_at, DateTime, allow_nil: false
-
-  belongs_to :user
+class UserPayment < Sequel::Model
+  many_to_one :user
 end

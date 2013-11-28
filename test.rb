@@ -1,34 +1,27 @@
-require 'data_mapper'
-require 'dm-migrations'
-require 'dm-timestamps'
-require 'dm-validations'
+require 'sequel'
 
-DataMapper::Logger.new($stdout, :debug)
-DataMapper.setup(:default, 'postgres://mneumann@localhost/test2')
+DB = Sequel.connect('postgres://mneumann@localhost/test')
 
 $LOAD_PATH << "."
-require 'model'
- 
-DataMapper.finalize
-DataMapper.auto_migrate!
-DataMapper::Model.raise_on_save_failure = true
+require 'model_seq'
+
 
 #
 # Create some initial data
 #
+user1 = User.create(:name => "Michael", :email => "test@test.de", :password_sha1 => "test")
+p user1
 
 group1 = ArticleGroup.create(name: "Beverages")
-art1 = group1.articles.create(name: "Beer")
-art1.prices.create(price: 1.2)
-art2 = group1.articles.create(name: "Water")
-art2.prices.create(price: 0.5)
+art1 = group1.add_article(name: "Beer")
+art1.add_price(price: 1.2)
+art2 = group1.add_article(name: "Water")
+art2.add_price(price: 0.5)
 
 group2 = ArticleGroup.create(name: "Candy")
-art3 = group2.articles.create(name: "Chocolate")
-art3.prices.create(price: 1)
+art3 = group2.add_article(name: "Chocolate")
+art3.add_price(price: 1)
 
-
-user1 = User.create(name: "Michael", email: "test@test.de", password_sha1: "test")
 
 ArticleGroup.each do |ag|
   p ag
@@ -37,3 +30,5 @@ ArticleGroup.each do |ag|
   end
   puts "----------------------"
 end
+
+p user1.buy(ArticleGroup.first.articles.first.prices.first, 2)
