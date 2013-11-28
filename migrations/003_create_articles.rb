@@ -6,7 +6,7 @@ Sequel.migration do
 
       String :name, :null=>false, :size=>100
       String :description, :null=>false, :size=>200, :default=>""
-      DateTime :created_at, :null=>false
+      DateTime :created_at, :null=>false, :default=>Sequel.function(:now)
 
       unique [:article_group_id, :name]
     end

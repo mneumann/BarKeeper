@@ -1,3 +1,3 @@
 task :migrate do
-  sh "sequel -m ./migrations postgres://localhost/testseq"
+  sh "sequel -E -m ./migrations postgres://localhost/testseq"
 end

@@ -5,7 +5,7 @@ Sequel.migration do
       foreign_key :user_id, :users, :null=>false
 
       BigDecimal :amount, :null=>false, :size=>[8,2]
-      DateTime :created_at, :null=>false
+      DateTime :created_at, :null=>false, :default=>Sequel.function(:now)
     end
   end
 end

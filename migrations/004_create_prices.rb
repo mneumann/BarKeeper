@@ -4,7 +4,7 @@ Sequel.migration do
       primary_key :id
       foreign_key :article_id, :articles, :null=>false
       BigDecimal :price, :null=>false, :size=>[8,2]
-      DateTime :created_at, :null=>false
+      DateTime :created_at, :null=>false, :default=>Sequel.function(:now)
     end
   end
 end

@@ -6,7 +6,7 @@ Sequel.migration do
       foreign_key :price_id, :prices, :null=>false
 
       Integer :count, :null=>false
-      DateTime :created_at, :null=>false
+      DateTime :created_at, :null=>false, :default=>Sequel.function(:now)
     end
   end
 end
