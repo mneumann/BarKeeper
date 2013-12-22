@@ -8,7 +8,7 @@ class User < Sequel::Model
 
   def buy(article_price, count=1)
     User.db.transaction do
-      UserTransaction.create(count: count, user: self, price: article_price)
+      UserTransaction.create(count: count, user: self, article_price: article_price)
       total = count * article_price.price 
       self.user_balance_dataset.update(:balance => Sequel.+(:balance, total))
     end
@@ -21,16 +21,16 @@ end
 
 class Article < Sequel::Model
   many_to_one :article_group
-  one_to_many :prices
+  one_to_many :article_prices
 end
 
-class Price < Sequel::Model
+class ArticlePrice < Sequel::Model
   many_to_one :article
 end
 
 class UserTransaction < Sequel::Model
   many_to_one :user
-  many_to_one :price
+  many_to_one :article_price
 end
 
 class UserPayment < Sequel::Model

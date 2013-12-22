@@ -15,13 +15,13 @@ p user1
 
 group1 = ArticleGroup.create(name: "Beverages")
 art1 = group1.add_article(name: "Beer")
-art1.add_price(price: 1.2)
+art1.add_article_price(price: 1.2)
 art2 = group1.add_article(name: "Water")
-art2.add_price(price: 0.5)
+art2.add_article_price(price: 0.5)
 
 group2 = ArticleGroup.create(name: "Candy")
 art3 = group2.add_article(name: "Chocolate")
-art3.add_price(price: 1)
+art3.add_article_price(price: 1)
 
 
 ArticleGroup.each do |ag|
@@ -32,4 +32,4 @@ ArticleGroup.each do |ag|
   puts "----------------------"
 end
 
-p user1.buy(ArticleGroup.first.articles.first.prices.first, 2)
+p user1.buy(ArticleGroup.first.articles.first.article_prices.first, 2)
